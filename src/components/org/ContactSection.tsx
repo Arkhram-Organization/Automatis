@@ -7,7 +7,7 @@ type TermLine = { type: "system" | "input" | "output" | "error" | "success"; tex
 
 const COPY = {
   es: {
-    pre: "── ARKHRAM / CANAL DE ACCESO ──",
+    pre: "── AUTOMATIS / CANAL DE ACCESO ──",
     headline: "CONTACTO",
     cta: "Nos vamos a poner en contacto para coordinar una reunión personalizada donde analizamos tu necesidad y diseñamos la solución desde cero.",
     ctaSub: "No plantillas. No paquetes genéricos. Cada proyecto empieza con una conversación real.",
@@ -25,17 +25,17 @@ const COPY = {
     },
     channels: { label: "CANALES DIRECTOS", linkedin: "LinkedIn", email: "Email" },
     initLines: [
-      { type: "system" as const, text: "ARKHRAM RELAY v2.6 — CANAL SEGURO" },
+      { type: "system" as const, text: "AUTOMATIS RELAY v2.6 — CANAL SEGURO" },
       { type: "system" as const, text: "Estableciendo conexión cifrada..." },
       { type: "output" as const, text: "Conexión establecida. Verificación: PENDIENTE." },
       { type: "output" as const, text: "Ingresá tu mensaje en los campos de abajo." },
     ],
-    successLine: "✓ Transmisión recibida. Arkhram responderá por canales seguros.",
+    successLine: "✓ Transmisión recibida. Automatis responderá por canales seguros.",
     errorLine: "ERROR DE RELAY: Falló la transmisión. Contactá vía LinkedIn.",
     note: "Respondemos en menos de 24h. Si el proyecto es real, la conversación también.",
   },
   en: {
-    pre: "── ARKHRAM / ACCESS CHANNEL ──",
+    pre: "── AUTOMATIS / ACCESS CHANNEL ──",
     headline: "CONTACT",
     cta: "We'll reach out to schedule a personalized meeting where we analyze your needs and design the solution from scratch.",
     ctaSub: "No templates. No generic packages. Every project starts with a real conversation.",
@@ -53,12 +53,12 @@ const COPY = {
     },
     channels: { label: "DIRECT CHANNELS", linkedin: "LinkedIn", email: "Email" },
     initLines: [
-      { type: "system" as const, text: "ARKHRAM COMMUNICATION RELAY v2.6 — SECURE CHANNEL" },
+      { type: "system" as const, text: "AUTOMATIS COMMUNICATION RELAY v2.6 — SECURE CHANNEL" },
       { type: "system" as const, text: "Establishing encrypted connection..." },
       { type: "output" as const, text: "Connection established. Identity verification: PENDING." },
       { type: "output" as const, text: "Enter your message in the fields below." },
     ],
-    successLine: "✓ Transmission received. Arkhram will respond through secure channels.",
+    successLine: "✓ Transmission received. Automatis will respond through secure channels.",
     errorLine: "RELAY ERROR: Transmission failed. Contact via LinkedIn.",
     note: "We respond within 24h. If the project is real, so is the conversation.",
   },
@@ -119,7 +119,7 @@ export function ContactSection() {
     }
     setStatus("sending");
     pushLine({ type: "input", text: `> TRANSMIT name="${name}" email="${email}"` });
-    pushLine({ type: "system", text: lang === "es" ? "Cifrando payload... enrutando por relay Arkhram..." : "Encrypting payload... routing through Arkhram relay..." });
+    pushLine({ type: "system", text: lang === "es" ? "Cifrando payload... enrutando por relay Automatis..." : "Encrypting payload... routing through Automatis relay..." });
     try {
       const res = await fetch("https://formspree.io/f/xpwzpapq", {
         method: "POST",
@@ -189,7 +189,7 @@ export function ContactSection() {
               {["#8b1a1a", "#5a5010", "#1a3a1a"].map((clr, i) => (
                 <div key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: clr, opacity: 0.6 }} />
               ))}
-              <span style={{ fontFamily: "monospace", fontSize: "0.44rem", letterSpacing: "0.2em", color: "rgba(139,26,26,0.4)", marginLeft: "0.5rem" }}>arkhram-relay.sh</span>
+              <span style={{ fontFamily: "monospace", fontSize: "0.44rem", letterSpacing: "0.2em", color: "rgba(139,26,26,0.4)", marginLeft: "0.5rem" }}>automatis-relay.sh</span>
             </div>
 
             {/* Mini log */}

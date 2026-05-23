@@ -5,7 +5,7 @@ import { useLang } from "@/hooks/useLang";
 
 const COPY = {
   es: {
-    pre: "── ARKHRAM / CAPACIDADES ──",
+    pre: "── AUTOMATIS / CAPACIDADES ──",
     headline: "SERVICIOS",
     sub: "No vendemos horas. Resolvemos problemas.\nCada proyecto se diseña desde el problema real, no desde el catálogo.",
     services: [
@@ -48,7 +48,7 @@ const COPY = {
     ],
   },
   en: {
-    pre: "── ARKHRAM / CAPABILITIES ──",
+    pre: "── AUTOMATIS / CAPABILITIES ──",
     headline: "SERVICES",
     sub: "We don't sell hours. We solve problems.\nEvery project is designed from the real problem, not from the catalog.",
     services: [

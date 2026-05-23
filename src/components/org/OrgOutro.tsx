@@ -9,14 +9,14 @@ const COPY = {
     quote: "La arquitectura solo es visible para quienes saben dónde mirar.",
     github: "⟶   ORGANIZACIÓN EN GITHUB",
     builtBy: "Construido por",
-    footer: "ARKHRAM ORGANIZATION — BUENOS AIRES — 2026",
+    footer: "AUTOMATIS — BUENOS AIRES — 2026",
   },
   en: {
     pre: "── TRANSMISSION_END ──",
     quote: "The architecture is only visible to those who know where to look.",
     github: "⟶   GITHUB ORGANIZATION",
     builtBy: "Built by",
-    footer: "ARKHRAM ORGANIZATION — BUENOS AIRES — 2026",
+    footer: "AUTOMATIS — BUENOS AIRES — 2026",
   },
 };
 
@@ -79,14 +79,14 @@ export function OrgOutro() {
           </h2>
         </motion.div>
 
-        {/* ARKHRAM watermark */}
+        {/* AUTOMATIS watermark */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 2, delay: 1.2 }}
         >
           <div style={{ fontFamily: "'Cinzel', serif", fontSize: "clamp(3rem, 10vw, 6rem)", fontWeight: 900, letterSpacing: "0.35em", color: "transparent", WebkitTextStroke: "1px rgba(139,26,26,0.25)", marginBottom: "1rem" }}>
-            ARKHRAM
+            AUTOMATIS
           </div>
         </motion.div>
 
@@ -104,7 +104,7 @@ export function OrgOutro() {
           style={{ display: "flex", gap: "1.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "4rem" }}
         >
           <a
-            href="https://github.com/Arkhram-Organization"
+            href="https://github.com/Automatis-Organization"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-gothic"

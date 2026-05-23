@@ -30,7 +30,7 @@ const ARCHIVES: Record<"es" | "en", Archive[]> = {
       transmission: "Despertás dentro de una dimensión que recuerda tu nombre. El portal es real — si podés encontrarlo. Los relojes aquí corren al revés.",
       stack: ["C#", "ASP.NET MVC", "JavaScript", "HTML", "CSS", "Sound Design"],
       authors: ["sebacalvino", "theotrosman"],
-      href: "https://github.com/Arkhram-Organization/ESCAPE-C137",
+      href: "https://github.com/Automatis-Organization/ESCAPE-C137",
     },
     {
       code: "ARK-002",
@@ -68,7 +68,7 @@ const ARCHIVES: Record<"es" | "en", Archive[]> = {
       transmission: "You wake inside a dimension that remembers your name. The portal is real — if you can find it. The clocks here run backwards.",
       stack: ["C#", "ASP.NET MVC", "JavaScript", "HTML", "CSS", "Sound Design"],
       authors: ["sebacalvino", "theotrosman"],
-      href: "https://github.com/Arkhram-Organization/ESCAPE-C137",
+      href: "https://github.com/Automatis-Organization/ESCAPE-C137",
     },
     {
       code: "ARK-002",
@@ -99,10 +99,10 @@ const ARCHIVES: Record<"es" | "en", Archive[]> = {
 
 const COPY = {
   es: {
-    pre: "── ARKHRAM / ARCHIVOS CLASIFICADOS ──",
+    pre: "── AUTOMATIS / ARCHIVOS CLASIFICADOS ──",
     headline: "LOS ARTEFACTOS",
-    sub: "Cada proyecto es evidencia. No de lo que Arkhram hace — sino de cómo piensa.\nClick para descifrar.",
-    recordsLabel: (n: number) => `REGISTROS: ${n} / ESTADO: PÚBLICO / NIVEL: ARKHRAM-0`,
+    sub: "Cada proyecto es evidencia. No de lo que Automatis hace — sino de cómo piensa.\nClick para descifrar.",
+    recordsLabel: (n: number) => `REGISTROS: ${n} / ESTADO: PÚBLICO / NIVEL: AUTOMATIS-0`,
     repo: "⟶ REPOSITORIO",
     live: "⟶ INSTANCIA LIVE",
     transmission: "/ transmisión",
@@ -110,10 +110,10 @@ const COPY = {
     operators: "/ operadores",
   },
   en: {
-    pre: "── ARKHRAM / CLASSIFIED ARCHIVES ──",
+    pre: "── AUTOMATIS / CLASSIFIED ARCHIVES ──",
     headline: "THE ARTIFACTS",
-    sub: "Each project is evidence. Not of what Arkhram does — but of what it thinks.\nClick to decrypt.",
-    recordsLabel: (n: number) => `RECORDS: ${n} / STATUS: PUBLIC / LEVEL: ARKHRAM-0`,
+    sub: "Each project is evidence. Not of what Automatis does — but of what it thinks.\nClick to decrypt.",
+    recordsLabel: (n: number) => `RECORDS: ${n} / STATUS: PUBLIC / LEVEL: AUTOMATIS-0`,
     repo: "⟶ REPOSITORY",
     live: "⟶ LIVE INSTANCE",
     transmission: "/ transmission",

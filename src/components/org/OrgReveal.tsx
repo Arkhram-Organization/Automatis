@@ -5,9 +5,9 @@ import { useLang } from "@/hooks/useLang";
 
 const COPY = {
   es: {
-    pre: "── ARKHRAM / REGISTRO DEL SISTEMA ──",
+    pre: "── AUTOMATIS / REGISTRO DEL SISTEMA ──",
     headline: "NO UN EQUIPO.",
-    manifesto: "Arkhram es un sistema de creencias con un historial de commits. Un organismo digital clandestino que construye lo que el problema demanda — y nada más.",
+    manifesto: "Automatis es un sistema de creencias con un historial de commits. Un organismo digital clandestino que construye lo que el problema demanda — y nada más.",
     directives: [
       { label: "CONSTRUIR", text: "Sistemas que sobrevivan al problema que los requirió." },
       { label: "OPERAR", text: "En la señal. No en el ruido. No en la tendencia." },
@@ -23,9 +23,9 @@ const COPY = {
     ],
   },
   en: {
-    pre: "── ARKHRAM / SYSTEM RECORD ──",
+    pre: "── AUTOMATIS / SYSTEM RECORD ──",
     headline: "NOT A TEAM.",
-    manifesto: "Arkhram is a belief system with a commit history. A clandestine digital organism that builds what the problem demands — and nothing else.",
+    manifesto: "Automatis is a belief system with a commit history. A clandestine digital organism that builds what the problem demands — and nothing else.",
     directives: [
       { label: "BUILD", text: "Systems that outlive the problem that required them." },
       { label: "OPERATE", text: "In the signal. Not the noise. Not the trend." },
@@ -133,7 +133,7 @@ export function OrgReveal() {
               style={{ position: "relative", zIndex: 2, marginBottom: "1.8rem" }}
             >
               <div style={{ fontFamily: "'Cinzel', serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.2em", color: "rgba(212,201,184,0.7)", marginBottom: "0.3rem" }}>
-                ARKHRAM
+                AUTOMATIS
               </div>
               <div style={{ background: "rgba(139,26,26,0.2)", height: "0.85rem", width: "70%", display: "flex", alignItems: "center", paddingLeft: "0.3rem" }}>
                 <span style={{ fontFamily: "monospace", fontSize: "0.42rem", letterSpacing: "0.1em", color: "rgba(139,26,26,0.6)" }}>
