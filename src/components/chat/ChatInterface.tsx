@@ -287,16 +287,24 @@ export function ChatInterface({
         body: JSON.stringify({ config }),
       });
       const data = await response.json();
-      if (data.automation) {
-        setSuccessMessage(
-          `Automatización "${data.automation.name}" creada ${
-            data.n8nWorkflowId ? "y activada" : "como borrador"
-          } exitosamente.`
-        );
-        onAutomationCreated?.();
+      if (!response.ok || !data.automation) {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: "Hubo un error guardando la automatización. ¿Podés intentarlo de nuevo?" },
+        ]);
+        return;
       }
-    } catch (error) {
-      console.error("Error generating flow:", error);
+      setSuccessMessage(
+        `Automatización "${data.automation.name}" creada ${
+          data.n8nWorkflowId ? "y activada" : "como borrador"
+        } exitosamente.`
+      );
+      onAutomationCreated?.();
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Hubo un error generando la automatización. ¿Podés intentarlo de nuevo?" },
+      ]);
     } finally {
       setIsGenerating(false);
     }

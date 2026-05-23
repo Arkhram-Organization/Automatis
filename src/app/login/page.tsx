@@ -1,251 +1,158 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { useScramble } from "@/hooks/useScramble";
 import Link from "next/link";
 
 function LoginForm() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const supabase = createClient();
 
   useEffect(() => {
     setMounted(true);
     if (searchParams.get("error")) setError("Error de autenticación. Intentá de nuevo.");
   }, [searchParams]);
 
-  async function handleGoogle() {
+  const title = useScramble(
+    mode === "login" ? "Bienvenido de vuelta." : "Crear tu cuenta.",
+    { delay: 0, speed: 50, trigger: mounted }
+  );
+
+  function handleGoogle() {
     setLoading(true);
     setError("");
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: { access_type: "offline", prompt: "consent" },
-      },
-    });
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    }
+    window.location.href = "/api/auth/google";
   }
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setSuccess("");
 
-    if (mode === "login") {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        setError("Email o contraseña incorrectos.");
-        setLoading(false);
-        return;
-      }
-      router.push("/chat");
-    } else {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    try {
+      const res = await fetch(mode === "login" ? "/api/auth/login" : "/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-        return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "Error inesperado. Intentá de nuevo.");
+      } else if (mode === "login") {
+        router.push("/chat");
+      } else {
+        setSuccess(data.message ?? "Revisá tu email para confirmar tu cuenta.");
       }
-      setSuccess("Revisá tu email para confirmar tu cuenta. Puede estar en spam.");
+    } catch {
+      setError("Error de conexión. Intentá de nuevo.");
     }
+
     setLoading(false);
   }
 
   return (
-    <div className="min-h-screen flex overflow-hidden relative" style={{ background: "#050505" }}>
-
-      {/* Atmospheric bg */}
-      {mounted && (
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0" style={{
-            background: "radial-gradient(ellipse 80% 60% at 20% 50%, rgba(139,26,26,0.05) 0%, transparent 70%)",
-          }} />
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 3px)",
-            }}
-          />
+    <div className="min-h-screen bg-[#050505] flex overflow-hidden">
+      {/* Left panel — visual */}
+      <div className="hidden lg:flex flex-col justify-between w-[45%] relative overflow-hidden p-12">
+        {/* Background glow */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-violet-700/25 rounded-full blur-[130px]" />
+          <div className="absolute bottom-1/4 right-0 w-[350px] h-[350px] bg-indigo-700/20 rounded-full blur-[100px]" />
         </div>
-      )}
 
-      {/* Left — gothic hero */}
-      <div
-        className="hidden lg:flex flex-col justify-between w-[44%] relative overflow-hidden p-14"
-        style={{ borderRight: "1px solid rgba(255,255,255,0.04)" }}
-      >
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <span
-            style={{
-              fontFamily: "'Cinzel', serif",
-              fontSize: "16px",
-              fontWeight: 900,
-              color: "#d4c9b8",
-              letterSpacing: "0.15em",
-            }}
-          >
-            AUTOMATIS
-          </span>
-          <div
-            className="w-1 h-1 rounded-full animate-pulse"
-            style={{ background: "#8b1a1a", boxShadow: "0 0 6px rgba(139,26,26,0.8)" }}
-          />
-        </Link>
+        {/* Top wordmark */}
+        <div>
+          <Link href="/" className="text-sm font-bold text-white font-mono tracking-tight">
+            Automatis
+          </Link>
+        </div>
 
-        {/* Center content */}
+        {/* Center quote / feature */}
         <div className="space-y-8">
-          <div
-            className="h-px"
-            style={{ background: "linear-gradient(90deg, rgba(139,26,26,0.6), rgba(192,160,96,0.2), transparent)" }}
-          />
           <div className="space-y-4">
-            <p
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: "clamp(20px, 2.5vw, 28px)",
-                color: "#d4c9b8",
-                letterSpacing: "0.05em",
-                lineHeight: 1.3,
-              }}
-            >
-              Describe el proceso.<br />AUTOMATIS lo automatiza.
+            <p className="text-3xl font-bold text-white leading-snug max-w-xs">
+              Automatizá tu negocio{" "}
+              <span className="bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+                con una sola conversación.
+              </span>
             </p>
-            <p className="font-mono text-[11px] leading-relaxed" style={{ color: "#4a4540" }}>
-              Convierte lenguaje natural en flujos operativos reales. Sin código, sin configuración, sin consultores.
+            <p className="text-zinc-500 text-sm max-w-xs leading-relaxed">
+              Describís qué querés, la IA pregunta lo que falta y genera el flujo lista para usar.
             </p>
           </div>
-          <div
-            className="h-px"
-            style={{ background: "linear-gradient(90deg, rgba(139,26,26,0.3), transparent)" }}
-          />
+
+          {/* Testimonial / social proof */}
+          <div className="rounded-2xl border border-zinc-800/60 bg-zinc-900/40 backdrop-blur-sm p-5 max-w-xs">
+            <p className="text-zinc-300 text-sm leading-relaxed">
+              "En 10 minutos tenía mi primera automatización corriendo. Nunca había usado n8n."
+            </p>
+            <div className="mt-3 flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-full bg-violet-600/40 flex items-center justify-center text-xs font-bold text-violet-300">
+                MG
+              </div>
+              <div>
+                <p className="text-xs font-medium text-zinc-300">Martín G.</p>
+                <p className="text-[11px] text-zinc-600">Inmobiliaria · Buenos Aires</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Bottom specs */}
-        <div className="space-y-0">
-          {[
-            ["Motor de IA", "Llama 3.3 / 70B vía Groq"],
-            ["Ejecución", "n8n self-hosted"],
-            ["Conectores", "40+ sistemas nativos"],
-          ].map(([label, val]) => (
-            <div
-              key={label}
-              className="flex justify-between items-baseline font-mono text-[10px] py-3"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}
-            >
-              <span style={{ color: "#3a3530" }}>{label}</span>
-              <span style={{ color: "#6a5a50" }}>{val}</span>
+        {/* Bottom stats */}
+        <div className="flex gap-8">
+          {[["500+", "Automatizaciones creadas"], ["12", "Industrias"], ["< 5min", "Para el primer flujo"]].map(([n, l]) => (
+            <div key={n}>
+              <p className="text-lg font-bold text-white">{n}</p>
+              <p className="text-[11px] text-zinc-600">{l}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Right — Form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 relative">
-        <div className="w-full max-w-[340px] space-y-7">
-
-          {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-2">
-            <Link
-              href="/"
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: "14px",
-                color: "#d4c9b8",
-                letterSpacing: "0.15em",
-              }}
-            >
-              AUTOMATIS
-            </Link>
+      {/* Right panel — form */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-sm space-y-7">
+          {/* Mobile wordmark */}
+          <div className="lg:hidden">
+            <Link href="/" className="text-sm font-bold text-white font-mono">Automatis</Link>
           </div>
 
-          {/* Header */}
-          <div className="space-y-1.5">
-            <p
-              className="font-mono text-[9px] tracking-[0.35em] uppercase"
-              style={{ color: "#8b1a1a" }}
-            >
-              {mode === "login" ? "/ ACCESO AL SISTEMA" : "/ NUEVO OPERADOR"}
-            </p>
-            <h1
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: "20px",
-                color: "#d4c9b8",
-                letterSpacing: "0.05em",
-                fontWeight: 600,
-              }}
-            >
-              {mode === "login" ? "Bienvenido de vuelta." : "Crear acceso."}
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold text-white font-mono">
+              {mounted ? title : (mode === "login" ? "Bienvenido de vuelta." : "Crear tu cuenta.")}
             </h1>
+            <p className="text-sm text-zinc-500">
+              {mode === "login" ? "Ingresá a tu cuenta para continuar." : "Empezá gratis, sin tarjeta de crédito."}
+            </p>
           </div>
 
-          {/* Error/Success */}
           {error && (
-            <div
-              className="font-mono text-[11px] px-4 py-3 flex items-start gap-2"
-              style={{
-                color: "#cc4444",
-                borderLeft: "2px solid #8b1a1a",
-                background: "rgba(139,26,26,0.06)",
-              }}
-            >
-              <span style={{ color: "#8b1a1a", flexShrink: 0 }}>✗</span>
-              <span>{error}</span>
+            <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
+              {error}
             </div>
           )}
           {success && (
-            <div
-              className="font-mono text-[11px] px-4 py-3 flex items-start gap-2"
-              style={{
-                color: "#7aaa6a",
-                borderLeft: "2px solid #4a7a3a",
-                background: "rgba(74,122,58,0.06)",
-              }}
-            >
-              <span style={{ color: "#6a8a5a", flexShrink: 0 }}>✓</span>
-              <span>{success}</span>
+            <div className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-3">
+              {success}
             </div>
           )}
 
-          {/* Google OAuth */}
+          {/* Google */}
           <button
             onClick={handleGoogle}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-3.5 font-mono text-[10px] tracking-[0.15em] transition-all duration-300 disabled:opacity-40 group"
-            style={{
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.02)",
-              color: "#6a6060",
-              letterSpacing: "0.12em",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(139,26,26,0.4)";
-              (e.currentTarget as HTMLButtonElement).style.color = "#d4c9b8";
-              (e.currentTarget as HTMLButtonElement).style.background = "rgba(139,26,26,0.04)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.08)";
-              (e.currentTarget as HTMLButtonElement).style.color = "#6a6060";
-              (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.02)";
-            }}
+            className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl border border-zinc-800 hover:border-zinc-700 bg-zinc-900/60 hover:bg-zinc-900 text-zinc-200 text-sm font-medium transition-all duration-200 disabled:opacity-50 group"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -253,76 +160,73 @@ function LoginForm() {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            {loading ? "CONECTANDO..." : "CONTINUAR CON GOOGLE"}
+            <span>Continuar con Google</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200" />
           </button>
 
-          {/* Divider */}
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <span className="font-mono text-[10px]" style={{ color: "#2a2520" }}>—</span>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="flex-1 h-px bg-zinc-800/80" />
+            <span className="text-[11px] text-zinc-600 uppercase tracking-wider">o</span>
+            <div className="flex-1 h-px bg-zinc-800/80" />
           </div>
 
           {/* Email form */}
           <form onSubmit={handleEmail} className="space-y-3">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="email@empresa.com"
-              className="w-full px-4 py-3 font-mono text-[12px] bg-transparent transition-colors duration-200 focus:outline-none placeholder:text-[#2a2520]"
-              style={{
-                border: "1px solid rgba(255,255,255,0.08)",
-                color: "#d4c9b8",
-              }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(139,26,26,0.5)")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              placeholder="contraseña"
-              className="w-full px-4 py-3 font-mono text-[12px] bg-transparent transition-colors duration-200 focus:outline-none placeholder:text-[#2a2520]"
-              style={{
-                border: "1px solid rgba(255,255,255,0.08)",
-                color: "#d4c9b8",
-              }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(139,26,26,0.5)")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}
-            />
+            <div className="relative">
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600" />
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-zinc-900/60 border border-zinc-800 focus:border-violet-500/50 focus:outline-none text-sm text-zinc-100 placeholder:text-zinc-600 transition-colors"
+              />
+            </div>
+            <div className="relative">
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="w-full pl-10 pr-10 py-3 rounded-xl bg-zinc-900/60 border border-zinc-800 focus:border-violet-500/50 focus:outline-none text-sm text-zinc-100 placeholder:text-zinc-600 transition-colors"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-400 transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              </button>
+            </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 font-mono text-[10px] tracking-[0.2em] transition-all duration-300 disabled:opacity-40 btn-gothic"
+              className="w-full py-3.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold transition-all duration-200 disabled:opacity-50 hover:shadow-[0_0_25px_rgba(124,58,237,0.35)] flex items-center justify-center gap-2 group"
             >
-              {loading
-                ? "PROCESANDO..."
-                : mode === "login"
-                ? "INICIAR SESIÓN →"
-                : "CREAR ACCESO →"}
+              <span>{loading ? "Cargando..." : mode === "login" ? "Ingresar" : "Crear cuenta"}</span>
+              {!loading && <ArrowRight className="w-3.5 h-3.5 -translate-x-1 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-200" />}
             </button>
           </form>
 
-          {/* Toggle */}
-          <p className="font-mono text-[10px] text-center" style={{ color: "#2a2520" }}>
-            {mode === "login" ? "¿Sin acceso? " : "¿Ya tenés cuenta? "}
+          <p className="text-center text-xs text-zinc-600">
+            {mode === "login" ? "¿No tenés cuenta? " : "¿Ya tenés cuenta? "}
             <button
               onClick={() => { setMode(mode === "login" ? "signup" : "login"); setError(""); setSuccess(""); }}
-              className="transition-colors duration-200"
-              style={{ color: "#5a4040" }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#8b1a1a")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#5a4040")}
+              className="text-violet-400 hover:text-violet-300 transition-colors font-medium"
             >
-              {mode === "login" ? "Crear acceso" : "Iniciar sesión"}
+              {mode === "login" ? "Crear cuenta gratis" : "Iniciar sesión"}
             </button>
           </p>
 
-          <p className="font-mono text-[9px] text-center" style={{ color: "#1a1a1a" }}>
-            Al continuar aceptás los Términos de uso y Política de privacidad.
+          <p className="text-center text-[11px] text-zinc-700">
+            Al continuar aceptás los{" "}
+            <span className="text-zinc-600 cursor-pointer hover:text-zinc-400 transition-colors">Términos de uso</span>
+            {" "}y{" "}
+            <span className="text-zinc-600 cursor-pointer hover:text-zinc-400 transition-colors">Política de privacidad</span>.
           </p>
         </div>
       </div>
