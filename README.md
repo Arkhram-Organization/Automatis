@@ -1,6 +1,6 @@
-# Arkhram — Plataforma SaaS de Automatizaciones con IA
+# [Automatis](https://automatis.vercel.app/) — Plataforma SaaS de Automatizaciones con IA
 
-[Describí en lenguaje natural qué querés automatizar. La IA detecta qué falta, lo pregunta de a uno, y genera la automatización lista para correr en n8n.](https://automatis.vercel.app/)
+Describí en lenguaje natural qué querés automatizar. La IA detecta qué falta, lo pregunta de a uno, y genera la automatización lista para correr en n8n.
 
 ## Stack
 
